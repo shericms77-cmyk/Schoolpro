@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#1565C0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="SchoolPro">
+<title>School Admin Pro</title>
+<link rel="manifest" href="manifest.json">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- SPLASH -->
+<div id="splash">
+  <div class="splash-inner">
+    <div class="splash-logo">
+      <div class="logo-ring"><span>🏫</span></div>
+    </div>
+    <h1 class="splash-title">SchoolPro</h1>
+    <p class="splash-sub">School Management System</p>
+    <div class="splash-loader"><div></div></div>
+  </div>
+</div>
+
+<!-- LOGIN -->
+<div id="login-screen" class="screen hidden">
+  <div class="login-bg">
+    <div class="login-blob b1"></div>
+    <div class="login-blob b2"></div>
+    <div class="login-blob b3"></div>
+  </div>
+  <div class="login-card">
+    <div class="login-logo"><span>🏫</span></div>
+    <h2>SchoolPro</h2>
+    <p class="login-tagline">Complete School Management</p>
+    <div class="login-divider"><span>Sign in to continue</span></div>
+    <button id="google-login-btn" class="btn-google">
+      <svg width="20" height="20" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20H24v8h11.3C33.6 33.1 29.3 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3 0 5.8 1.1 7.9 3l5.7-5.7C34 6.5 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.7-.4-4z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.5 16 19 13 24 13c3 0 5.8 1.1 7.9 3l5.7-5.7C34 6.5 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-1.8 13.5-4.7l-6.2-5.2C29.4 35.6 26.8 36.5 24 36.5c-5.2 0-9.6-3.5-11.2-8.2l-6.5 5C9.9 40 16.5 44 24 44z"/><path fill="#1976D2" d="M43.6 20H24v8h11.3c-.8 2.3-2.4 4.2-4.4 5.5l6.2 5.2C41.1 35.4 44 30.1 44 24c0-1.3-.1-2.7-.4-4z"/></svg>
+      Continue with Google
+    </button>
+    <p class="login-note">Your data is securely stored in the cloud.<br>Deleting the app never loses your data.</p>
+  </div>
+</div>
+
+<!-- MAIN APP -->
+<div id="app" class="hidden">
+
+  <!-- TOP BAR -->
+  <header id="topbar">
+    <button id="menu-btn" class="icon-btn" onclick="toggleSidebar()">☰</button>
+    <div class="topbar-center">
+      <span id="page-title">Dashboard</span>
+    </div>
+    <div class="topbar-right">
+      <button class="icon-btn" id="notif-btn" onclick="showPage('notices')">🔔<span id="notif-badge" class="badge hidden">0</span></button>
+      <img id="user-avatar" class="avatar-sm" src="" alt="U" onclick="showPage('profile')">
+    </div>
+  </header>
+
+  <!-- SIDEBAR -->
+  <div id="sidebar-overlay" onclick="toggleSidebar()"></div>
+  <nav id="sidebar">
+    <div class="sidebar-header">
+      <img id="sidebar-avatar" class="avatar-md" src="" alt="">
+      <div>
+        <div id="sidebar-name" class="fw600">User</div>
+        <div id="sidebar-role" class="role-badge">admin</div>
+      </div>
+    </div>
+    <div class="sidebar-school">
+      <span id="sidebar-school-name">📚 School Name</span>
+    </div>
+    <ul class="nav-list" id="nav-list">
+      <li data-page="dashboard" data-roles="admin,accountant,teacher,parent"><span class="ni">📊</span>Dashboard</li>
+      <li data-page="students" data-roles="admin,accountant,teacher"><span class="ni">🎓</span>Students</li>
+      <li data-page="fees" data-roles="admin,accountant"><span class="ni">💳</span>Fee Ledger</li>
+      <li data-page="attendance" data-roles="admin,teacher"><span class="ni">📅</span>Attendance</li>
+      <li data-page="exams" data-roles="admin,teacher,parent"><span class="ni">📝</span>Exams & Marks</li>
+      <li data-page="notices" data-roles="admin,teacher,parent"><span class="ni">📢</span>Notice Board</li>
+      <li data-page="homework" data-roles="admin,teacher,parent"><span class="ni">📖</span>Homework Diary</li>
+      <li data-page="timetable" data-roles="admin,teacher,parent"><span class="ni">🗓️</span>Timetable</li>
+      <li data-page="staff" data-roles="admin,accountant"><span class="ni">👨‍🏫</span>Staff</li>
+      <li data-page="salary" data-roles="admin,accountant"><span class="ni">💵</span>Salary</li>
+      <li data-page="users" data-roles="admin"><span class="ni">👥</span>Manage Users</li>
+      <li data-page="settings" data-roles="admin"><span class="ni">⚙️</span>Settings</li>
+      <li class="nav-logout" onclick="doLogout()"><span class="ni">🚪</span>Logout</li>
+    </ul>
+  </nav>
+
+  <!-- PAGE CONTAINER -->
+  <main id="pages">
+
+    <!-- DASHBOARD -->
+    <section id="page-dashboard" class="page active">
+      <div class="dash-greeting">
+        <div>
+          <p class="greeting-sub" id="greeting-time">Good morning</p>
+          <h2 class="greeting-name" id="greeting-name">Loading...</h2>
+        </div>
+        <div id="dash-year" class="year-chip">2025-26</div>
+      </div>
+      <div class="stats-grid" id="dash-stats"></div>
+      <div class="section-title">Fee Collection <span id="dash-month-label"></span></div>
+      <div class="chart-wrap" id="fee-chart"></div>
+      <div class="section-title">Recent Activity</div>
+      <div id="recent-activity" class="activity-list"></div>
+    </section>
+
+    <!-- STUDENTS -->
+    <section id="page-students" class="page">
+      <div class="page-toolbar">
+        <div class="search-wrap"><input type="text" id="student-search" placeholder="Search student..." oninput="filterStudents(this.value)"></div>
+        <button class="btn-fab-sm" onclick="openModal('student-modal')">+ Add</button>
+      </div>
+      <div class="filter-chips" id="class-filter-chips"></div>
+      <div id="students-list" class="card-list"></div>
+    </section>
+
+    <!-- FEE LEDGER -->
+    <section id="page-fees" class="page">
+      <div class="page-toolbar">
+        <select id="fee-class-filter" onchange="loadFees()" class="sel-input">
+          <option value="">All Classes</option>
+        </select>
+        <select id="fee-year-filter" onchange="loadFees()" class="sel-input">
+          <option value="2025-26">2025-26</option>
+          <option value="2024-25">2024-25</option>
+        </select>
+      </div>
+      <div class="fee-summary-strip" id="fee-summary"></div>
+      <div class="fee-ledger-wrap">
+        <div class="fee-ledger-scroll">
+          <table id="fee-table" class="fee-table">
+            <thead id="fee-thead"></thead>
+            <tbody id="fee-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="fee-legend">
+        <span class="dot paid"></span>Paid
+        <span class="dot partial"></span>Partial
+        <span class="dot due"></span>Due
+        <span class="dot exempt"></span>Exempt
+      </div>
+    </section>
+
+    <!-- ATTENDANCE -->
+    <section id="page-attendance" class="page">
+      <div class="page-toolbar">
+        <select id="att-class" onchange="loadAttendance()" class="sel-input">
+          <option value="">Select Class</option>
+        </select>
+        <input type="month" id="att-month" class="sel-input" onchange="loadAttendance()">
+      </div>
+      <div class="att-summary-row" id="att-summary"></div>
+      <div id="att-list" class="att-grid"></div>
+      <button class="btn-save-att hidden" id="save-att-btn" onclick="saveAttendance()">💾 Save Attendance</button>
+    </section>
+
+    <!-- EXAMS -->
+    <section id="page-exams" class="page">
+      <div class="page-toolbar">
+        <select id="exam-class" onchange="loadExams()" class="sel-input"><option value="">All Classes</option></select>
+        <select id="exam-term" onchange="loadExams()" class="sel-input">
+          <option value="1st Term">1st Term</option>
+          <option value="Mid Term">Mid Term</option>
+          <option value="Final">Final</option>
+          <option value="Annual">Annual</option>
+        </select>
+      </div>
+      <button class="btn-add-full" id="add-exam-btn" onclick="openAddExam()">+ Add / Edit Marks</button>
+      <div id="exam-list" class="card-list"></div>
+    </section>
+
+    <!-- NOTICES -->
+    <section id="page-notices" class="page">
+      <button class="btn-add-full" id="add-notice-btn" onclick="openModal('notice-modal')">+ Post Notice</button>
+      <div id="notice-list" class="notice-cards"></div>
+    </section>
+
+    <!-- HOMEWORK -->
+    <section id="page-homework" class="page">
+      <div class="page-toolbar">
+        <select id="hw-class" onchange="loadHomework()" class="sel-input"><option value="">All Classes</option></select>
+        <input type="date" id="hw-date" class="sel-input" onchange="loadHomework()">
+      </div>
+      <button class="btn-add-full" id="add-hw-btn" onclick="openModal('hw-modal')">+ Add Homework</button>
+      <div id="hw-list" class="card-list"></div>
+    </section>
+
+    <!-- TIMETABLE -->
+    <section id="page-timetable" class="page">
+      <div class="page-toolbar">
+        <select id="tt-class" onchange="loadTimetable()" class="sel-input"><option value="">Select Class</option></select>
+      </div>
+      <button class="btn-add-full" id="add-tt-btn" onclick="openModal('tt-modal')">+ Add Period</button>
+      <div class="tt-grid-wrap" id="tt-grid"></div>
+    </section>
+
+    <!-- STAFF -->
+    <section id="page-staff" class="page">
+      <div class="page-toolbar">
+        <div class="search-wrap"><input type="text" id="staff-search" placeholder="Search staff..." oninput="filterStaff(this.value)"></div>
+        <button class="btn-fab-sm" onclick="openModal('staff-modal')">+ Add</button>
+      </div>
+      <div id="staff-list" class="card-list"></div>
+    </section>
+
+    <!-- SALARY -->
+    <section id="page-salary" class="page">
+      <div class="page-toolbar">
+        <select id="sal-month" class="sel-input" onchange="loadSalary()"></select>
+        <select id="sal-year" class="sel-input" onchange="loadSalary()">
+          <option>2025-26</option><option>2024-25</option>
+        </select>
+      </div>
+      <div class="salary-summary" id="sal-summary"></div>
+      <div id="salary-list" class="card-list"></div>
+      <button class="btn-add-full" onclick="generateSalarySlips()">⚡ Generate All Slips</button>
+    </section>
+
+    <!-- USERS -->
+    <section id="page-users" class="page">
+      <div id="users-list" class="card-list"></div>
+    </section>
+
+    <!-- SETTINGS -->
+    <section id="page-settings" class="page">
+      <div class="settings-card">
+        <h3>School Information</h3>
+        <div class="form-group"><label>School Name</label><input type="text" id="set-school-name" class="form-input"></div>
+        <div class="form-group"><label>Principal Name</label><input type="text" id="set-principal" class="form-input"></div>
+        <div class="form-group"><label>Phone</label><input type="text" id="set-phone" class="form-input"></div>
+        <div class="form-group"><label>Address</label><input type="text" id="set-address" class="form-input"></div>
+        <div class="form-group"><label>Current Academic Year</label>
+          <select id="set-year" class="form-input">
+            <option>2025-26</option><option>2024-25</option><option>2026-27</option>
+          </select>
+        </div>
+        <div class="form-group"><label>Classes (comma separated)</label><input type="text" id="set-classes" class="form-input" placeholder="Nursery,KG,Class 1,..."></div>
+        <div class="form-group"><label>Subjects (comma separated)</label><input type="text" id="set-subjects" class="form-input" placeholder="Urdu,English,Math,..."></div>
+        <button class="btn-primary full" onclick="saveSettings()">Save Settings</button>
+      </div>
+    </section>
+
+    <!-- PROFILE -->
+    <section id="page-profile" class="page">
+      <div class="profile-card">
+        <img id="profile-avatar" class="profile-pic" src="" alt="">
+        <h3 id="profile-name"></h3>
+        <p id="profile-email" class="muted"></p>
+        <div id="profile-role-badge" class="role-badge lg"></div>
+      </div>
+      <div class="settings-card">
+        <h3>Account</h3>
+        <div class="profile-row"><span>Version</span><span>1.0.0</span></div>
+        <div class="profile-row"><span>Data Storage</span><span>Firebase Cloud</span></div>
+        <button class="btn-danger full mt16" onclick="doLogout()">🚪 Sign Out</button>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- BOTTOM NAV -->
+  <nav id="bottom-nav">
+    <button onclick="showPage('dashboard')" data-page="dashboard" class="bnav-btn active">
+      <span>📊</span><small>Home</small>
+    </button>
+    <button onclick="showPage('students')" data-page="students" class="bnav-btn">
+      <span>🎓</span><small>Students</small>
+    </button>
+    <button onclick="showPage('fees')" data-page="fees" class="bnav-btn">
+      <span>💳</span><small>Fees</small>
+    </button>
+    <button onclick="showPage('attendance')" data-page="attendance" class="bnav-btn">
+      <span>📅</span><small>Attend.</small>
+    </button>
+    <button onclick="showPage('notices')" data-page="notices" class="bnav-btn">
+      <span>📢</span><small>Notices</small>
+    </button>
+  </nav>
+
+</div><!-- /app -->
+
+<!-- ═══════════ MODALS ═══════════ -->
+
+<!-- Student Modal -->
+<div id="student-modal" class="modal-overlay hidden">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-head"><h3 id="student-modal-title">Add Student</h3><button onclick="closeModal('student-modal')">✕</button></div>
+    <div class="modal-body">
+      <input type="hidden" id="s-id">
+      <div class="form-row2">
+        <div class="form-group"><label>Student ID</label><input id="s-sid" class="form-input" placeholder="SCH-001"></div>
+        <div class="form-group"><label>Full Name *</label><input id="s-name" class="form-input" placeholder="Ahmed Ali"></div>
+      </div>
+      <div class="form-row2">
+        <div class="form-group"><label>Father's Name</label><input id="s-father" class="form-input"></div>
+        <div class="form-group"><label>Class *</label><select id="s-class" class="form-input"></select></div>
+      </div>
+      <div class="form-row2">
+        <div class="form-group"><label>Section</label><input id="s-section" class="form-input" placeholder="A"></div>
+        <div class="form-group"><label>Gender</label><select id="s-gender" class="form-input"><option>Male</option><option>Female</option></select></div>
+      </div>
+      <div class="form-row2">
+        <div class="form-group"><label>Date of Birth</label><input id="s-dob" type="date" class="form-input"></div>
+        <div class="form-group"><label>Contact</label><input id="s-contact" class="form-input" placeholder="0300-..."></div>
+      </div>
+      <div class="form-row2">
+        <div class="form-group"><label>Monthly Fee (Rs)</label><input id="s-fee" type="number" class="form-input" placeholder="2000"></div>
+        <div class="form-group"><label>Discount (Rs)</label><input id="s-discount" type="number" class="form-input" placeholder="0"></div>
+      </div>
+      <div class="form-row2">
+        <div class="form-group"><label>Admission Date</label><input id="s-admit" type="date" class="form-input"></div>
+        <div class="form-group"><label>Status</label><select id="s-status" class="form-input"><option>Active</option><option>Inactive</option><option>Left</option></select></div>
+      </div>
+      <div class="form-group"><label>Address</label><input id="s-address" class="form-input"></div>
+      <div class="form-group"><label>Blood Group</label><select id="s-blood" class="form-input"><option>A+</option><option>A-</option><option>B+</option><option>B-</option><option>O+</option><option>O-</option><option>AB+</option><option>AB-</option></select></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn-ghost" onclick="closeModal('student-modal')">Cancel</button>
+      <button class="btn-primary" onclick="saveStudent()">Save Student</button>
+    </div>
+  </div>
+</div>
+
+<!-- Fee Payment Modal -->
+<div id="fee-modal" class="modal-overlay hidden">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-head"><h3 id="fee-modal-title">Record Payment</h3><button onclick="closeModal('fee-modal')">✕</button></div>
+    <div class="modal-body">
+      <input type="hidden" id="f-student-id">
+      <input type="hidden" id="f-month-key">
+      <div class="fee-student-info" id="fee-modal-student-info"></div>
+      <div class="form-row2">
+        <div class="form-group"><label>Amount Due (Rs)</label><input id="f-due" class="form-input" readonly></div>
+        <div class="form-group"><label>Amount Paid (Rs)</label><input id="f-paid" type="number" class="form-input"></div>
+      </div>
+      <div class="form-row2">
+        <div class="form-group"><label>Late Fee (Rs)</label><input id="f-late" type="number" class="form-input" placeholder="0"></div>
+        <div class="form-group"><label>Discount (Rs)</label><input id="f-discount" type="number" class="form-input" placeholder="0"></div>
+      </div>
+      <div class="form-row2">
+        <div class="form-group"><label>Payment Date</label><input id="f-date" type="date" class="form-input"></div>
+        <div class="form-group"><label>Mode</label>
+          <select id="f-mode" class="form-input"><option>Cash</option><option>JazzCash</option><option>EasyPaisa</option><option>Bank Transfer</option></select>
+        </div>
+      </div>
+      <div class="form-group"><label>Receipt No</label><input id="f-receipt" class="form-input"></div>
+      <div class="form-group"><label>Remarks</label><input id="f-remarks" class="form-input"></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn-ghost" onclick="closeModal('fee-modal')">Cancel</button>
+      <button class="btn-primary" onclick="saveFeePayment()">Record Payment</button>
+    </div>
+  </div>
+</div>
+
+<!-- Notice Modal -->
+<div id="notice-modal" class="modal-overlay hidden">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-head"><h3>Post Notice</h3><button onclick="closeModal('notice-modal')">✕</button></div>
+    <div class="modal-body">
+      <div class="form-group"><label>Title *</label><input id="n-title" class="form-input" placeholder="Notice title"></div>
+      <div class="form-group"><label>Message *</label><textarea id="n-body" class="form-input" rows="4" placeholder="Notice content..."></textarea></div>
+      <div class="form-row2">
+        <div class="form-group"><label>Category</label>
+          <select id="n-cat" class="form-input"><option>General</option><option>Holiday</option><option>Exam</option><option>Fee</option><option>Event</option><option>Urgent</option></select>
+        </div>
+        <div class="form-group"><label>Audience</label>
+          <select id="n-audience" class="form-input"><option>All</option><option>Parents</option><option>Teachers</option><option>Staff</option></select>
+        </div>
+      </div>
+      <div class="form-group"><label>Video Link (YouTube/etc.)</label><input id="n-video" class="form-input" placeholder="https://youtube.com/..."></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn-ghost" onclick="closeModal('notice-modal')">Cancel</button>
+      <button class="btn-primary" onclick="saveNotice()">Post Notice</button>
+    </div>
+  </div>
+</div>
+
+<!-- Homework Modal -->
+<div id="hw-modal" class="modal-overlay hidden">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-head"><h3>Add Homework</h3><button onclick="closeModal('hw-modal')">✕</button></div>
+    <div class="modal-body">
+      <div class="form-row2">
+        <div class="form-group"><label>Class *</label><select id="hw-cls" class="form-input"></select></div>
+        <div class="form-group"><label>Subject *</label><select id="hw-sub" class="form-input"></select></div>
+      </div>
+      <div class="form-row2">
+        <div class="form-group"><label>Date Given</label><input id="hw-given" type="date" class="form-input"></div>
+        <div class="form-group"><label>Due Date</label><input id="hw-due-date" type="date" class="form-input"></div>
+      </div>
+      <div class="form-group"><label>Description *</label><textarea id="hw-desc" class="form-input" rows="3" placeholder="Homework details..."></textarea></div>
+      <div class="form-group"><label>Video Link (optional)</label><input id="hw-video" class="form-input" placeholder="https://youtube.com/..."></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn-ghost" onclick="closeModal('hw-modal')">Cancel</button>
+      <button class="btn-primary" onclick="saveHomework()">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- Timetable Modal -->
+<div id="tt-modal" class="modal-overlay hidden">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-head"><h3>Add Period</h3><button onclick="closeModal('tt-modal')">✕</button></div>
+    <div class="modal-body">
+      <div class="form-row2">
+        <div class="form-group"><label>Class *</label><select id="tt-cls" class="form-input"></select></div>
+        <div class="form-group"><label>Day *</label>
+          <select id="tt-day" class="form-input">
+            <option>Monday</option><option>Tuesday</option><option>Wednesday</option>
+            <option>Thursday</option><option>Friday</option><option>Saturday</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row2">
+        <div class="form-group"><label>Period No</label><input id="tt-period" type="number" class="form-input" min="1" max="10"></div>
+        <div class="form-group"><label>Subject *</label><select id="tt-sub" class="form-input"></select></div>
+      </div>
+      <div class="form-row2">
+        <div class="form-group"><label>Start Time</label><input id="tt-start" type="time" class="form-input"></div>
+        <div class="form-group"><label>End Time</label><input id="tt-end" type="time" class="form-input"></div>
+      </div>
+      <div class="form-group"><label>Teacher</label><input id="tt-teacher" class="form-input"></div>
+      <div class="form-group"><label>Room</label><input id="tt-room" class="form-input" placeholder="Room 1"></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn-ghost" onclick="closeModal('tt-modal')">Cancel</button>
+      <button class="btn-primary" onclick="saveTimetable()">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- Staff Modal -->
+<div id="staff-modal" class="modal-overlay hidden">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-head"><h3 id="staff-modal-title">Add Staff</h3><button onclick="closeModal('staff-modal')">✕</button></div>
+    <div class="modal-body">
+      <input type="hidden" id="st-id">
+      <div class="form-row2">
+        <div class="form-group"><label>Employee ID</label><input id="st-eid" class="form-input" placeholder="EMP-001"></div>
+        <div class="form-group"><label>Full Name *</label><input id="st-name" class="form-input"></div>
+      </div>
+      <div class="form-row2">
+        <div class="form-group"><label>Designation</label><input id="st-desig" class="form-input" placeholder="Teacher"></div>
+        <div class="form-group"><label>Department</label>
+          <select id="st-dept" class="form-input"><option>Teaching</option><option>Management</option><option>Admin</option><option>Support</option></select>
+        </div>
+      </div>
+      <div class="form-row2">
+        <div class="form-group"><label>Contact</label><input id="st-contact" class="form-input"></div>
+        <div class="form-group"><label>Join Date</label><input id="st-join" type="date" class="form-input"></div>
+      </div>
+      <div class="form-row2">
+        <div class="form-group"><label>Monthly Salary</label><input id="st-salary" type="number" class="form-input"></div>
+        <div class="form-group"><label>CNIC</label><input id="st-cnic" class="form-input"></div>
+      </div>
+      <div class="form-row2">
+        <div class="form-group"><label>Qualification</label><input id="st-qual" class="form-input"></div>
+        <div class="form-group"><label>Status</label><select id="st-status" class="form-input"><option>Active</option><option>Inactive</option><option>Left</option></select></div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn-ghost" onclick="closeModal('staff-modal')">Cancel</button>
+      <button class="btn-primary" onclick="saveStaff()">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- Exam Marks Modal -->
+<div id="exam-modal" class="modal-overlay hidden">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-head"><h3>Enter Marks</h3><button onclick="closeModal('exam-modal')">✕</button></div>
+    <div class="modal-body">
+      <div class="form-row2">
+        <div class="form-group"><label>Class *</label><select id="em-class" class="form-input" onchange="loadStudentsForExam()"></select></div>
+        <div class="form-group"><label>Term *</label>
+          <select id="em-term" class="form-input"><option>1st Term</option><option>Mid Term</option><option>Final</option><option>Annual</option></select>
+        </div>
+      </div>
+      <div class="form-group"><label>Subject *</label><select id="em-subject" class="form-input"></select></div>
+      <div class="form-group"><label>Total Marks</label><input id="em-total" type="number" class="form-input" value="100"></div>
+      <div class="form-group"><label>Exam Date</label><input id="em-date" type="date" class="form-input"></div>
+      <div id="exam-students-marks" class="exam-marks-list"></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn-ghost" onclick="closeModal('exam-modal')">Cancel</button>
+      <button class="btn-primary" onclick="saveExamMarks()">Save Marks</button>
+    </div>
+  </div>
+</div>
+
+<!-- User Role Modal -->
+<div id="user-modal" class="modal-overlay hidden">
+  <div class="modal-sheet sm">
+    <div class="modal-handle"></div>
+    <div class="modal-head"><h3>Change Role</h3><button onclick="closeModal('user-modal')">✕</button></div>
+    <div class="modal-body">
+      <input type="hidden" id="u-uid">
+      <div id="u-info" class="fee-student-info"></div>
+      <div class="form-group"><label>Role</label>
+        <select id="u-role" class="form-input">
+          <option value="admin">Admin</option>
+          <option value="accountant">Accountant</option>
+          <option value="teacher">Teacher</option>
+          <option value="parent">Parent/Student</option>
+        </select>
+      </div>
+      <div class="form-group"><label>Linked Student ID (for parents)</label><input id="u-student-id" class="form-input" placeholder="SCH-001"></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn-ghost" onclick="closeModal('user-modal')">Cancel</button>
+      <button class="btn-primary" onclick="saveUserRole()">Update Role</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div id="toast-container"></div>
+
+<!-- Firebase -->
+<script type="module" src="app.js"></script>
+</body>
+</html>
