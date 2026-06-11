@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SchoolPro</title>
+<style>
+body{margin:0;font-family:Arial,sans-serif;background:#0d1b2a;color:#fff;display:flex;align-items:center;justify-content:center;min-height:100vh}
+.box{background:#1a2f47;padding:30px;border-radius:16px;width:90%;max-width:340px;text-align:center}
+h2{margin:0 0 4px}
+p{color:#9BB0C8;font-size:13px;margin:0 0 20px}
+input{width:100%;padding:12px;margin-bottom:10px;border-radius:8px;border:1px solid #2a4060;background:#0d1b2a;color:#fff;font-size:14px;box-sizing:border-box}
+button{width:100%;padding:13px;border-radius:8px;border:none;font-size:15px;font-weight:700;cursor:pointer;margin-bottom:8px}
+.b1{background:#1565C0;color:#fff}
+.b2{background:#00897B;color:#fff}
+.err{background:rgba(200,0,0,0.2);border:1px solid red;padding:10px;border-radius:8px;font-size:13px;color:#ff6b6b;margin-bottom:10px;display:none}
+.link{color:#42A5F5;cursor:pointer;font-size:13px}
+#reg{display:none}
+</style>
+</head>
+<body>
+<div class="box">
+  <div style="font-size:40px">🏫</div>
+  <h2>SchoolPro</h2>
+  <p>IQRA Model School Pabbi</p>
+
+  <div id="login">
+    <div class="err" id="le"></div>
+    <input type="email" id="em" placeholder="Email">
+    <input type="password" id="pw" placeholder="Password">
+    <button class="b1" onclick="login()">Sign In</button>
+    <p class="link" onclick="toggle()">No account? Register →</p>
+  </div>
+
+  <div id="reg">
+    <div class="err" id="re"></div>
+    <input type="text" id="rn" placeholder="Full Name">
+    <input type="email" id="rm" placeholder="Email">
+    <input type="password" id="rp" placeholder="Password (min 6)">
+    <button class="b2" onclick="register()">Create Account</button>
+    <p class="link" onclick="toggle()">← Back to Sign In</p>
+  </div>
+</div>
+
+<script type="module">
+import{initializeApp}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import{getAuth,signInWithEmailAndPassword,createUserWithEmailAndPassword,updateProfile,onAuthStateChanged}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import{getFirestore,doc,setDoc,getDoc,serverTimestamp}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const app=initializeApp({apiKey:"AIzaSyBepfsv5cUJYLoEZVjLQs_Dp8Y8wGq3DqU",authDomain:"iqra-model-school-pabbi.firebaseapp.com",projectId:"iqra-model-school-pabbi",storageBucket:"iqra-model-school-pabbi.firebasestorage.app",messagingSenderId:"913481081823",appId:"1:913481081823:web:840e865c726f6368fe9a6a"});
+const auth=getAuth(app);
+const db=getFirestore(app);
+
+onAuthStateChanged(auth,async u=>{
+  if(u){
+    const r=doc(db,'users',u.uid);
+    const s=await getDoc(r);
+    if(!s.exists())await setDoc(r,{uid:u.uid,name:u.displayName||'User',email:u.email,role:'parent',createdAt:serverTimestamp()});
+    document.body.innerHTML='<div style="text-align:center;padding:60px 20px"><div style="font-size:50px">✅</div><h2 style="margin:16px 0 8px;font-family:Arial">Login Successful!</h2><p style="color:#9BB0C8;font-family:Arial">Welcome '+u.displayName+'<br>'+u.email+'</p><p style="color:#42A5F5;margin-top:20px;font-family:Arial;font-size:13px">Loading full app...</p></div>';
+    setTimeout(()=>location.reload(),2000);
+  }
+});
+
+window.toggle=()=>{
+  const l=document.getElementById('login'),r=document.getElementById('reg');
+  l.style.display=l.style.display==='none'?'block':'none';
+  r.style.display=r.style.display==='none'?'block':'none';
+};
+
+window.login=async()=>{
+  const e=document.getElementById('em').value.trim(),p=document.getElementById('pw').value;
+  const el=document.getElementById('le');el.style.display='none';
+  if(!e||!p){el.textContent='Enter email and password';el.style.display='block';return;}
+  try{await signInWithEmailAndPassword(auth,e,p);}
+  catch(err){el.textContent=err.code==='auth/invalid-credential'?'Wrong email or password. Try Register.':err.message;el.style.display='block';}
+};
+
+window.register=async()=>{
+  const n=document.getElementById('rn').value.trim(),e=document.getElementById('rm').value.trim(),p=document.getElementById('rp').value;
+  const el=document.getElementById('re');el.style.display='none';
+  if(!n||!e||!p){el.textContent='Fill all fields';el.style.display='block';return;}
+  if(p.length<6){el.textContent='Password needs 6+ characters';el.style.display='block';return;}
+  try{const r=await createUserWithEmailAndPassword(auth,e,p);await updateProfile(r.user,{displayName:n});}
+  catch(err){el.textContent=err.code==='auth/email-already-in-use'?'Email already used. Sign in instead.':err.message;el.style.display='block';}
+};
+</script>
+</body>
+</html>
